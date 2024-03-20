@@ -46,7 +46,7 @@ if uploaded_file is not None:
         # Detailed data view
         st.write('Detailed View')
         # Option to select columns to display
-        cols_to_display = st.multiselect('Columns to display', options=filtered_data.columns, default=filtered_data.columns)
+        cols_to_display = st.multiselect('Columns to display', options=filtered_data.columns.tolist(), default=filtered_data.columns.tolist())
         st.dataframe(filtered_data[cols_to_display])
 
     else:
