@@ -6,9 +6,18 @@ def load_data(uploaded_file):
     if uploaded_file is not None:
         # Check the file extension and load accordingly
         if uploaded_file.name.endswith('.csv'):
-            return pd.read_csv(uploaded_file)
+            df = pd.read_csv(uploaded_file)
         elif uploaded_file.name.endswith(('.xlsx', '.xls')):
-            return pd.read_excel(uploaded_file)
+            df = pd.read_excel(uploaded_file)
+        
+        # Forward-fill 'Class' values to fill gaps
+        df['Class'] = df['Class'].ffill()
+        
+        # Additionally, remove rows where 'Class' is still NaN after forward filling
+        # This step handles cases where the first rows are NaN
+        df = df.dropna(subset=['Class'])
+        
+        return df
     return pd.DataFrame()
 
 st.title('Dealer Inventory/Sales Analysis Panel')
