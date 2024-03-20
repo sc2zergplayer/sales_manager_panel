@@ -23,7 +23,11 @@ if uploaded_file is not None:
     
     # Sidebar for model selection
     if 'MODEL' in df.columns:
-        selected_models = st.sidebar.multiselect('Select Models', options=df['MODEL'].unique())
+
+        all_models = df['MODEL'].unique()
+        all_models.remove("class")
+        all_models.remove(None)
+        selected_models = st.sidebar.multiselect('Select Models', options=all_models)
 
         # Filter data based on selected models
         if selected_models:
@@ -53,4 +57,3 @@ if uploaded_file is not None:
         st.warning('No models selected or available in the dataset.')
 else:
     st.info('Awaiting CSV file to be uploaded.')
-
