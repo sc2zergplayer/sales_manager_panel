@@ -41,31 +41,42 @@ if uploaded_file is not None:
 
     if selected_models:
         filtered_data = df[df['MODEL'].isin(selected_models)]
+
+        # Use tabs for organization
+        tab_sales, tab_inventory = st.tabs(["Sales Analysis", "Inventory Analysis"])
         
-        # Aggregate Sales Stats
-        st.write('Aggregate Sales Stats')
-        sales_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'PRIOR MONTH SALES', 'ROLLING 30 DAY  SALES ']].agg(['sum'])
-        st.dataframe(sales_stats)
+        with tab_sales:
+            # Aggregate Sales Stats
+            st.write('Aggregate Sales Stats')
+            sales_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'PRIOR MONTH SALES', 'ROLLING 30 DAY  SALES ']].agg(['sum'])
+            st.dataframe(sales_stats)
 
-        # Visualization: Popularity of Classes based on Prior Day Sales
-        st.write('Popularity of Classes Based on Prior Day Sales')
-        class_popularity = filtered_data.groupby('Class')['PRIORDAY SALES'].sum().sort_values(ascending=False)
-        st.bar_chart(class_popularity)
+            # Visualization: Popularity of Classes based on Prior Day Sales
+            st.write('Popularity of Classes Based on Prior Day Sales')
+            class_popularity = filtered_data.groupby('Class')['Y-T-D SALES'].sum().sort_values(ascending=False)
+            st.bar_chart(class_popularity)
 
-        # Visualization: Prior Day Sales by Model
-        st.write('Prior Day Sales by Model')
-        prior_day_sales = filtered_data.groupby('MODEL')['PRIORDAY SALES'].sum().sort_values(ascending=False)
-        st.bar_chart(prior_day_sales)
+            # Visualization: Popularity of Classes based on Prior Day Sales
+            st.write('Popularity of Classes Based on Prior Day Sales')
+            class_popularity = filtered_data.groupby('Class')['Y-T-D SALES'].sum().sort_values(ascending=False)
+            st.bar_chart(class_popularity)
 
-        # Aggregate Inventory Stats
-        st.write('Aggregate Inventory Stats')
-        inventory_stats = filtered_data[['DEALER INV', 'DAYS SUPPLY ', 'TOTAL AVAIL', 'TOTAL D/S ', 'IN LOAD', 'VPC INV', 'ON THE WATER', 'PR NOT SHIPPED', 'SCHED NOT PR'  ]].agg(['sum'])
-        st.dataframe(inventory_stats)
+            # Visualization: Prior Day Sales by Model
+            st.write('Prior Day Sales by Model')
+            prior_day_sales = filtered_data.groupby('MODEL')['PRIORDAY SALES'].sum().sort_values(ascending=False)
+            st.bar_chart(prior_day_sales)
 
-        # Visualization: Inventory Distribution Among Models
-        st.write('Inventory Distribution Among Models')
-        inventory_distribution = filtered_data.groupby('MODEL')['DEALER INV'].sum().sort_values(ascending=False)
-        st.bar_chart(inventory_distribution)
+        with tab_inventory:
+
+            # Aggregate Inventory Stats
+            st.write('Aggregate Inventory Stats')
+            inventory_stats = filtered_data[['DEALER INV', 'DAYS SUPPLY ', 'TOTAL AVAIL', 'TOTAL D/S ', 'IN LOAD', 'VPC INV', 'ON THE WATER', 'PR NOT SHIPPED', 'SCHED NOT PR'  ]].agg(['sum'])
+            st.dataframe(inventory_stats)
+
+            # Visualization: Inventory Distribution Among Models
+            st.write('Inventory Distribution Among Models')
+            inventory_distribution = filtered_data.groupby('MODEL')['DEALER INV'].sum().sort_values(ascending=False)
+            st.bar_chart(inventory_distribution)
 
         # Detailed data view
         st.write('Detailed View')
