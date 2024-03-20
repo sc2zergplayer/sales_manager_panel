@@ -33,12 +33,14 @@ if uploaded_file is not None:
         
         # Aggregate Sales Stats
         st.write('Aggregate Sales Stats')
-        sales_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'PRIOR MONTH SALES', 'ROLLING 30 DAY  SALES ']].agg(['Total'])
+        sales_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'PRIOR MONTH SALES', 'ROLLING 30 DAY  SALES ']].agg(['sum'])
+        sales_stats = sales_stats.rename(index={'sum': 'Total'})  # Rename the index label from 'sum' to 'Total'
         st.dataframe(sales_stats)
 
         # Aggregate Inventory Stats
         st.write('Aggregate Inventory Stats')
         inventory_stats = filtered_data[['DEALER INV', 'DAYS SUPPLY ', 'TOTAL AVAIL', 'TOTAL D/S ', 'IN LOAD', 'VPC INV', 'ON THE WATER', 'PR NOT SHIPPED', 'SCHED NOT PR'  ]].agg(['sum'])
+        inventory_stats = inventory_stats.rename(index={'sum': 'Total'})  # Rename the index label from 'sum' to 'Total'
         st.dataframe(inventory_stats)
 
         # Detailed data view
