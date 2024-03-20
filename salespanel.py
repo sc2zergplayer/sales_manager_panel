@@ -21,6 +21,9 @@ uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
 # Load the data only after the file is uploaded
 if uploaded_file is not None:
     df = load_data(uploaded_file)
+
+    # Let's print all column names to help with debugging
+    st.write('Column names in the uploaded file:', df.columns.tolist())
     
     # Sidebar for model selection
     if 'MODEL' in df.columns:
