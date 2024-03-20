@@ -29,7 +29,7 @@ if uploaded_file is not None:
     df = df[df['MODEL'].notna() & ~df['MODEL'].str.lower().isin(["class", "total"])]
     
     classes = df['Class'].unique()
-    selected_classes = st.multiselect('Select Classes', options=classes)
+    selected_classes = st.multiselect('Select Classes', options=classes, default=classes)
     
     # Automatically select models from the chosen classes
     if selected_classes:
@@ -91,6 +91,6 @@ if uploaded_file is not None:
         # Detailed data view
         st.write('Detailed View')
         cols_to_display = st.multiselect('Columns to display', options=filtered_data.columns.tolist(), default=filtered_data.columns.tolist())
-        st.dataframe(filtered_data[cols_to_display])
+        st.dataframe(filtered_data[cols_to_display], hide_index=True)
 else:
     st.info('Awaiting CSV file to be uploaded.')
