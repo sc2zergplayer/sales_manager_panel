@@ -50,12 +50,12 @@ if uploaded_file is not None:
         # Visualization: Popularity of Classes based on Prior Day Sales
         st.write('Popularity of Classes Based on Prior Day Sales')
         class_popularity = filtered_data.groupby('Class')['PRIORDAY SALES'].sum().sort_values(ascending=False)
-        st.pie_chart(class_popularity)
+        st.bar_chart(class_popularity)
 
         # Visualization: Prior Day Sales by Model
         st.write('Prior Day Sales by Model')
         prior_day_sales = filtered_data.groupby('MODEL')['PRIORDAY SALES'].sum().sort_values(ascending=False)
-        st.pie_chart(prior_day_sales)
+        st.bar_chart(prior_day_sales)
 
         # Aggregate Inventory Stats
         st.write('Aggregate Inventory Stats')
@@ -65,7 +65,7 @@ if uploaded_file is not None:
         # Visualization: Inventory Distribution Among Models
         st.write('Inventory Distribution Among Models')
         inventory_distribution = filtered_data.groupby('MODEL')['DEALER INV'].sum().sort_values(ascending=False)
-        st.pie_chart(inventory_distribution)
+        st.bar_chart(inventory_distribution)
 
         # Detailed data view
         st.write('Detailed View')
