@@ -4,14 +4,16 @@ import pandas as pd
 st.set_page_config(layout="wide")
 def load_data(uploaded_file):
     if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        df['Class'] = df['Class'].ffill()  # Fill down the 'Class' for all models
-        return df
+        # Check the file extension and load accordingly
+        if uploaded_file.name.endswith('.csv'):
+            return pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith(('.xlsx', '.xls')):
+            return pd.read_excel(uploaded_file)
     return pd.DataFrame()
 
-st.title('Mercedes Benz Sales Manager Panel')
+st.title('Dealer Inventory/Sales Analysis Panel')
 
-uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
+uploaded_file = st.file_uploader("Upload your input CSV or Excel file", type=["csv", "xlsx", "xls"])
 
 if uploaded_file is not None:
     df = load_data(uploaded_file)
