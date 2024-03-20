@@ -25,8 +25,9 @@ if uploaded_file is not None:
     if 'MODEL' in df.columns:
 
         all_models = df['MODEL'].unique()
-        all_models.remove("class")
-        all_models.remove(None)
+        all_models_clean = np.delete(all_models, ["class","None"])
+        all_models_clean = all_models_clean[~np.isnan(all_models_clean)]
+
         selected_models = st.sidebar.multiselect('Select Models', options=all_models)
 
         # Filter data based on selected models
