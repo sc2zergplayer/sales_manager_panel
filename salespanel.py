@@ -47,6 +47,16 @@ if uploaded_file is not None:
         sales_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'PRIOR MONTH SALES', 'ROLLING 30 DAY  SALES ']].agg(['sum'])
         st.dataframe(sales_stats)
 
+        # Visualization: Popularity of Classes based on Prior Day Sales
+        st.write('Popularity of Classes Based on Prior Day Sales')
+        class_popularity = filtered_data.groupby('Class')['PRIORDAY SALES'].sum().sort_values(ascending=False)
+        st.pie_chart(class_popularity)
+
+        # Visualization: Prior Day Sales by Model
+        st.write('Prior Day Sales by Model')
+        prior_day_sales = filtered_data.groupby('MODEL')['PRIORDAY SALES'].sum().sort_values(ascending=False)
+        st.pie_chart(prior_day_sales)
+
         # Aggregate Inventory Stats
         st.write('Aggregate Inventory Stats')
         inventory_stats = filtered_data[['DEALER INV', 'DAYS SUPPLY ', 'TOTAL AVAIL', 'TOTAL D/S ', 'IN LOAD', 'VPC INV', 'ON THE WATER', 'PR NOT SHIPPED', 'SCHED NOT PR'  ]].agg(['sum'])
@@ -55,12 +65,7 @@ if uploaded_file is not None:
         # Visualization: Inventory Distribution Among Models
         st.write('Inventory Distribution Among Models')
         inventory_distribution = filtered_data.groupby('MODEL')['DEALER INV'].sum().sort_values(ascending=False)
-        st.bar_chart(inventory_distribution)
-
-        # Visualization: Prior Day Sales by Model
-        st.write('Prior Day Sales by Model')
-        prior_day_sales = filtered_data.groupby('MODEL')['PRIORDAY SALES'].sum().sort_values(ascending=False)
-        st.bar_chart(prior_day_sales)
+        st.pie_chart(inventory_distribution)
 
         # Detailed data view
         st.write('Detailed View')
