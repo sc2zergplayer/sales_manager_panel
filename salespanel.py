@@ -1,11 +1,15 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 
-# Function to load the data
+# Function to load data
 def load_data(uploaded_file):
     if uploaded_file is not None:
-        return pd.read_csv(uploaded_file)
+        df = pd.read_csv(uploaded_file)
+        
+        # Forward-fill the 'Class' column to associate models with their respective classes
+        df['Class'] = df['Class'].ffill()
+
+        return df
     else:
         return pd.DataFrame()
 
@@ -18,13 +22,12 @@ st.markdown("## Upload a CSV file to get started.")
 # Upload the dataset and save as csv
 uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
 
+# Load the data only after the file is uploaded
 if uploaded_file is not None:
     df = load_data(uploaded_file)
-
-    # Clean the DataFrame to remove unwanted rows
-    df = df.dropna(subset=['MODEL', 'Class'])  # Drop rows where 'MODEL' or 'Class' is NaN
-    df = df[~df['MODEL'].str.lower().isin(["class", "total"])]  # Exclude rows with 'MODEL' as "class" or "Total"
-    df['Class'] = df['Class'].str.strip()  # Strip whitespace from the 'Class' column if any
+    
+    # Remove unwanted rows ('Total' and NaN rows)
+    df = df[df['MODEL'].notna() & (df['MODEL'].str.lower() != "total")]
 
     # Create a dropdown for selecting a class
     classes = df['Class'].unique()
@@ -32,31 +35,22 @@ if uploaded_file is not None:
 
     # Filter the models based on the selected class
     class_models = df[df['Class'] == selected_class]['MODEL'].unique()
-    selected_models = st.multiselect('Select Models', options=class_models)
+    
+    # Update multiselect options with models of the selected class
+    selected_models = st.multiselect('Select Models', options=class_models, default=class_models)
 
     # Filter data based on selected models
     if selected_models:
         filtered_data = df[df['MODEL'].isin(selected_models)]
-    else:
-        filtered_data = pd.DataFrame()
-
-    if not filtered_data.empty:
-        # Display data for selected models
-
-        # Adjusted column names with trailing spaces
-        summary_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'DEALER INV', 'DAYS SUPPLY ']].agg(['sum', 'mean', 'min', 'max'])
-        st.dataframe(summary_stats)
-
-        # Sales trends (example: M-T-D SALES)
-        st.write('Monthly-to-Date Sales Trends')
-        mt_d_sales = filtered_data[['MODEL', 'M-T-D SALES']].set_index('MODEL')
-        st.bar_chart(mt_d_sales)
-
+        
         # Detailed data view
         st.write('Detailed View')
-        st.dataframe(filtered_data)
-        
+        # Option to select columns to display
+        cols_to_display = st.multiselect('Columns to display', options=filtered_data.columns, default=filtered_data.columns)
+        st.dataframe(filtered_data[cols_to_display])
+
     else:
-        st.warning('No models selected or available in the dataset.')
+        filtered_data = pd.DataFrame()
+        st.warning('Please select one or more models.')
 else:
     st.info('Awaiting CSV file to be uploaded.')
