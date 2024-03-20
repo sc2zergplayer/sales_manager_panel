@@ -38,7 +38,7 @@ if uploaded_file is not None:
 
         # Adjusted column names with trailing spaces
         summary_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'DEALER INV', 'DAYS SUPPLY ']].agg(['sum', 'mean', 'min', 'max'])
-        st.table(summary_stats)
+        st.dataframe(summary_stats)
 
         # Sales trends (example: M-T-D SALES)
         st.write('Monthly-to-Date Sales Trends')
