@@ -23,7 +23,7 @@ if uploaded_file is not None:
 
     # Clean the DataFrame
     df = df.dropna(subset=['MODEL'])  # Drop rows where 'MODEL' column is NaN
-    df = df[df['MODEL'].str.lower() != "class"]  # Remove rows where 'MODEL' is "class"
+    df = df[~df['MODEL'].str.lower().isin(["class", "total"])]  # Remove rows where 'MODEL' is "class" or "Total"
     
     # Sidebar for model selection
     if 'MODEL' in df.columns:
