@@ -52,6 +52,16 @@ if uploaded_file is not None:
         inventory_stats = filtered_data[['DEALER INV', 'DAYS SUPPLY ', 'TOTAL AVAIL', 'TOTAL D/S ', 'IN LOAD', 'VPC INV', 'ON THE WATER', 'PR NOT SHIPPED', 'SCHED NOT PR'  ]].agg(['sum'])
         st.dataframe(inventory_stats)
 
+        # Visualization: Inventory Distribution Among Models
+        st.write('Inventory Distribution Among Models')
+        inventory_distribution = filtered_data.groupby('MODEL')['DEALER INV'].sum().sort_values(ascending=False)
+        st.bar_chart(inventory_distribution)
+
+        # Visualization: Prior Day Sales by Model
+        st.write('Prior Day Sales by Model')
+        prior_day_sales = filtered_data.groupby('MODEL')['PRIORDAY SALES'].sum().sort_values(ascending=False)
+        st.bar_chart(prior_day_sales)
+
         # Detailed data view
         st.write('Detailed View')
         cols_to_display = st.multiselect('Columns to display', options=filtered_data.columns.tolist(), default=filtered_data.columns.tolist())
