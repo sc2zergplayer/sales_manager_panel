@@ -18,17 +18,13 @@ st.markdown("## Upload a CSV file to get started.")
 # Upload the dataset and save as csv
 uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
 
-# Load the data only after the file is uploaded
 if uploaded_file is not None:
     df = load_data(uploaded_file)
-
-    # Let's print all column names to help with debugging
-    st.write('Column names in the uploaded file:', df.columns.tolist())
     
     # Sidebar for model selection
     if 'MODEL' in df.columns:
         selected_models = st.sidebar.multiselect('Select Models', options=df['MODEL'].unique())
-        
+
         # Filter data based on selected models
         if selected_models:
             filtered_data = df[df['MODEL'].isin(selected_models)]
@@ -40,9 +36,8 @@ if uploaded_file is not None:
     if not filtered_data.empty:
         # Display data for selected models
 
-        # Summary stats
-        st.write('Summary Stats')
-        summary_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES', 'DEALER INV', 'DAYS SUPPLY']].agg(['sum', 'mean', 'min', 'max'])
+        # Adjusted column names with trailing spaces
+        summary_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'DEALER INV', 'DAYS SUPPLY ']].agg(['sum', 'mean', 'min', 'max'])
         st.table(summary_stats)
 
         # Sales trends (example: M-T-D SALES)
@@ -58,3 +53,4 @@ if uploaded_file is not None:
         st.warning('No models selected or available in the dataset.')
 else:
     st.info('Awaiting CSV file to be uploaded.')
+
