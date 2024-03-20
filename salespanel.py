@@ -21,24 +21,24 @@ uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
 if uploaded_file is not None:
     df = load_data(uploaded_file)
 
-    # Clean the DataFrame
-    df = df.dropna(subset=['MODEL'])  # Drop rows where 'MODEL' column is NaN
-    df = df[~df['MODEL'].str.lower().isin(["class", "total"])]  # Remove rows where 'MODEL' is "class" or "Total"
-    
-    # Sidebar for model selection
-    if 'MODEL' in df.columns:
+    # Clean the DataFrame to remove unwanted rows
+    df = df.dropna(subset=['MODEL', 'Class'])  # Drop rows where 'MODEL' or 'Class' is NaN
+    df = df[~df['MODEL'].str.lower().isin(["class", "total"])]  # Exclude rows with 'MODEL' as "class" or "Total"
+    df['Class'] = df['Class'].str.strip()  # Strip whitespace from the 'Class' column if any
 
-        all_models = df['MODEL'].unique()
+    # Create a dropdown for selecting a class
+    classes = df['Class'].unique()
+    selected_class = st.selectbox('Select Class', options=classes)
 
-        selected_models = st.sidebar.multiselect('Select Models', options=all_models)
+    # Filter the models based on the selected class
+    class_models = df[df['Class'] == selected_class]['MODEL'].unique()
+    selected_models = st.multiselect('Select Models', options=class_models)
 
-        # Filter data based on selected models
-        if selected_models:
-            filtered_data = df[df['MODEL'].isin(selected_models)]
-        else:
-            filtered_data = pd.DataFrame()
+    # Filter data based on selected models
+    if selected_models:
+        filtered_data = df[df['MODEL'].isin(selected_models)]
     else:
-        st.error('The uploaded file does not contain a "MODEL" column.')
+        filtered_data = pd.DataFrame()
 
     if not filtered_data.empty:
         # Display data for selected models
