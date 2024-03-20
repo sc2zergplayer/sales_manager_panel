@@ -20,13 +20,15 @@ uploaded_file = st.file_uploader("Upload your input CSV file", type=["csv"])
 
 if uploaded_file is not None:
     df = load_data(uploaded_file)
+
+    # Clean the DataFrame
+    df = df.dropna(subset=['MODEL'])  # Drop rows where 'MODEL' column is NaN
+    df = df[df['MODEL'].str.lower() != "class"]  # Remove rows where 'MODEL' is "class"
     
     # Sidebar for model selection
     if 'MODEL' in df.columns:
 
         all_models = df['MODEL'].unique()
-        all_models_clean = np.delete(all_models, ["class","None"])
-        all_models_clean = all_models_clean[~np.isnan(all_models_clean)]
 
         selected_models = st.sidebar.multiselect('Select Models', options=all_models)
 
