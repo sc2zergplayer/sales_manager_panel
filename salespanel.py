@@ -51,14 +51,24 @@ if uploaded_file is not None:
             sales_stats = filtered_data[['PRIORDAY SALES', 'M-T-D SALES', 'Y-T-D SALES ', 'PRIOR MONTH SALES', 'ROLLING 30 DAY  SALES ']].agg(['sum'])
             st.dataframe(sales_stats)
 
-            # Visualization: Popularity of Classes based on Prior Day Sales
-            st.write('Popularity of Classes Based on Prior Day Sales')
-            class_popularity = filtered_data.groupby('Class')['Y-T-D SALES'].sum().sort_values(ascending=False)
+            # Visualization: Popularity of Classes based on on Y-T-D Sales
+            st.write('Popularity of Classes Based on Y-T-D Sales')
+            class_popularity = filtered_data.groupby('Class')['Y-T-D SALES '].sum().sort_values(ascending=False)
+            st.bar_chart(class_popularity)
+
+            # Visualization: Popularity of Classes based on on M-T-D Sales
+            st.write('Popularity of Classes Based on M-T-D Sales')
+            class_popularity = filtered_data.groupby('Class')['M-T-D SALES'].sum().sort_values(ascending=False)
             st.bar_chart(class_popularity)
 
             # Visualization: Popularity of Classes based on Prior Day Sales
-            st.write('Popularity of Classes Based on Prior Day Sales')
-            class_popularity = filtered_data.groupby('Class')['Y-T-D SALES'].sum().sort_values(ascending=False)
+            st.write('Popularity of Classes Based on PRIOR MONTH Sales')
+            class_popularity = filtered_data.groupby('Class')['PRIOR MONTH SALES'].sum().sort_values(ascending=False)
+            st.bar_chart(class_popularity)
+
+            # Visualization: Popularity of Classes based on Prior Day Sales
+            st.write('Popularity of Classes Based on ROLLING 30 DAY Sales')
+            class_popularity = filtered_data.groupby('Class')['ROLLING 30 DAY  SALES '].sum().sort_values(ascending=False)
             st.bar_chart(class_popularity)
 
             # Visualization: Prior Day Sales by Model
