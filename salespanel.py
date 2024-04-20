@@ -1316,7 +1316,7 @@ def display_report():
                 st.session_state.report_data = [row for row in st.session_state.report_data if nationwide_pattern.search(row[0])]
 
 
-    st.write(f"{st.session_state.report_data=}")       
+    st.write(f"{st.session_state=}")       
     if st.session_state.report_data:
         # Define the column names for the DataFrame
         column_names = ['Card Name', 'Phase', 'First Name', 'Last Name', 'Last Contacted', 'Email Addresses', 'Show Name', 'Show Version', 'Opening Date']
